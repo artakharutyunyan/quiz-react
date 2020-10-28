@@ -1,90 +1,103 @@
-import React, { Component } from "react";
-import "./Quiz.css";
-import ActiveQuiz from "../../components/ActiveQuiz/ActiveQuiz";
+import React, {Component} from 'react'
+import classes from './Quiz.css'
+import ActiveQuiz from '../../components/ActiveQuiz/ActiveQuiz'
+import FinishedQuiz from '../../components/FinishedQuiz/FinishedQuiz'
 
 class Quiz extends Component {
   state = {
+    isFinished: true,
     activeQuestion: 0,
-    answerState: null,
+    answerState: null, // { [id]: 'success' 'error' }
     quiz: [
       {
-        question: "What is sky color ?",
+        question: 'Какого цвета небо?',
         rightAnswerId: 2,
         id: 1,
         answers: [
-          { text: "Black", id: 1 },
-          { text: "Blue", id: 2 },
-          { text: "Red", id: 3 },
-          { text: "Green", id: 4 },
-        ],
+          {text: 'Черный', id: 1},
+          {text: 'Синий', id: 2},
+          {text: 'Красный', id: 3},
+          {text: 'Зеленый', id: 4}
+        ]
       },
       {
-        question: "When Yerevan was founded ?",
-        rightAnswerId: 1,
+        question: 'В каком году основали Санкт-Петербург?',
+        rightAnswerId: 3,
         id: 2,
         answers: [
-          { text: "782 BC", id: 1 },
-          { text: "783 BC", id: 2 },
-          { text: "687", id: 3 },
-          { text: "593", id: 4 },
-        ],
-      },
-    ],
-  };
+          {text: '1700', id: 1},
+          {text: '1702', id: 2},
+          {text: '1703', id: 3},
+          {text: '1803', id: 4}
+        ]
+      }
+    ]
+  }
 
-  onAnswerClickHandler = (answerId) => {
+  onAnswerClickHandler = answerId => {
     if (this.state.answerState) {
-      const key = Object.keys(this.state.answerState)[0];
-      if (this.state.answerState[key] === "succes") {
-        return;
+      const key = Object.keys(this.state.answerState)[0]
+      if (this.state.answerState[key] === 'success') {
+        return
       }
     }
-    this.setState({
-      answerState: { [answerId]: "success" },
-    });
 
-    const question = this.state.quiz[this.state.activeQuestion];
+    const question = this.state.quiz[this.state.activeQuestion]
 
     if (question.rightAnswerId === answerId) {
+      this.setState({
+        answerState: {[answerId]: 'success'}
+      })
+
       const timeout = window.setTimeout(() => {
         if (this.isQuizFinished()) {
+          this.setState({
+            isFinished: true
+          })
         } else {
           this.setState({
             activeQuestion: this.state.activeQuestion + 1,
-            answerState: null,
-          });
+            answerState: null
+          })
         }
-        window.clearTimeout(timeout);
-      }, 1000);
+        window.clearTimeout(timeout)
+      }, 1000)
     } else {
       this.setState({
-        answerState: { [answerId]: "error" },
-      });
+        answerState: {[answerId]: 'error'}
+      })
     }
-  };
+  }
 
   isQuizFinished() {
-    return this.state.activeQuestion + 1 === this.state.quizLength;
+    return this.state.activeQuestion + 1 === this.state.quiz.length
   }
 
   render() {
     return (
-      <div className="Quiz">
-        <div className="QuizWrapper">
-          <h1>Please answer</h1>
+      <div className={classes.Quiz}>
+        <div className={classes.QuizWrapper}>
+          <h1>Ответьте на все вопросы</h1>
 
-          <ActiveQuiz
-            answers={this.state.quiz[this.state.activeQuestion].answers}
-            question={this.state.quiz[this.state.activeQuestion].question}
-            onAnswerClick={this.onAnswerClickHandler}
-            quizLength={this.state.quiz.length}
-            answerNumber={this.state.activeQuestion + 1}
-            state={this.state.answerState}
-          />
+          {
+            this.state.isFinished
+             ? <FinishedQuiz
+
+                />
+             : <ActiveQuiz
+                answers={this.state.quiz[this.state.activeQuestion].answers}
+                question={this.state.quiz[this.state.activeQuestion].question}
+                onAnswerClick={this.onAnswerClickHandler}
+                quizLength={this.state.quiz.length}
+                answerNumber={this.state.activeQuestion + 1}
+                state={this.state.answerState}
+              />
+          }
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default Quiz;
+
+export default Quiz
