@@ -33,7 +33,7 @@ const FinishedQuiz = (props) => {
       </ul>
 
       <p>
-        You have {successCount} from {props.quiz.length}
+        You have {successCount} right answer from {props.quiz.length}
       </p>
 
       <div>

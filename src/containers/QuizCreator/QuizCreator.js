@@ -18,8 +18,8 @@ import {
 function createOptionControl(number) {
   return createControl(
     {
-      label: `Variant ${number}`,
-      errorMessage: "Value can not be empty",
+      label: `Option ${number}`,
+      errorMessage: "Option value can not be empty",
       id: number,
     },
     { required: true }
@@ -144,7 +144,7 @@ class QuizCreator extends Component {
   render() {
     const select = (
       <Select
-        label="Choose rigth question"
+        label="Choose right answer"
         value={this.state.rightAnswerId}
         onChange={this.selectChangeHandler}
         options={[
